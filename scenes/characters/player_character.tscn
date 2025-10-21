@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3 uid="uid://deyiwxmivrrey"]
+
+[ext_resource type="Script" uid="uid://c7ocr3ir2a3pf" path="res://scripts/player.gd" id="1_3hfu2"]
+[ext_resource type="Script" uid="uid://cd67pbd42aewg" path="res://scripts/gun.gd" id="2_ar13e"]
+[ext_resource type="PackedScene" uid="uid://ddhmq5t0ada46" path="res://saa.tscn" id="2_mjudt"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7dm0k"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_7dm0k"]
+
+[node name="PlayerCharacter" type="CharacterBody3D"]
+script = ExtResource("1_3hfu2")
+
+[node name="PillCollider" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_7dm0k")
+
+[node name="Gun" type="Node3D" parent="."]
+script = ExtResource("2_ar13e")
+
+[node name="SAA4" parent="Gun" instance=ExtResource("2_mjudt")]
+transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0.9769592)
+
+[node name="Meshes" type="Node3D" parent="."]
+
+[node name="PlayerMesh" type="Node3D" parent="Meshes"]
+
+[node name="BodyMesh" type="MeshInstance3D" parent="Meshes/PlayerMesh"]
+mesh = SubResource("CapsuleMesh_7dm0k")
+skeleton = NodePath("../../..")
+
+[node name="GameCamera" type="Camera3D" parent="."]
+transform = Transform3D(-4.3711385e-08, 0.70710677, -0.7071068, 0, 0.7071068, 0.70710677, 1, 3.0908616e-08, -3.090862e-08, -4.689575, 4.960205, 0)
+projection = 1
+size = 8.684
+near = 0.001
