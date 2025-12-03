@@ -1,17 +1,26 @@
-[gd_scene load_steps=10 format=3 uid="uid://e7tc3vs1jc76"]
+[gd_scene load_steps=11 format=3 uid="uid://e7tc3vs1jc76"]
 
-[ext_resource type="Texture2D" uid="uid://drt3txhfs4m13" path="res://art/textures/Seamless-Oak-Texture-1536x1152.jpg" id="1_psf7b"]
+[ext_resource type="Texture2D" uid="uid://cd42jangoj4iv" path="res://art/textures/dirt.png" id="1_2x7gc"]
+[ext_resource type="Texture2D" uid="uid://cshnl55dgujtv" path="res://art/textures/noise2.jpg" id="2_3424d"]
 [ext_resource type="Script" uid="uid://yuwtensimsvm" path="res://scripts/prop_randomizer.gd" id="2_ft172"]
 [ext_resource type="PackedScene" uid="uid://b51b508yte67" path="res://scenes/pickups/health_pickup.tscn" id="3_2x7gc"]
 [ext_resource type="PackedScene" uid="uid://delwumbtej0cc" path="res://scenes/pickups/ammo_pickup.tscn" id="4_17wl8"]
 [ext_resource type="PackedScene" uid="uid://c71lyexatjty1" path="res://scenes/decorations/tree.tscn" id="5_3424d"]
 [ext_resource type="Script" uid="uid://dl10g5xxq4n7t" path="res://scenes/map/chunk_area.gd" id="6_ft172"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
-albedo_texture = ExtResource("1_psf7b")
-emission_enabled = true
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2luw2"]
+diffuse_mode = 1
+specular_mode = 1
+albedo_texture = ExtResource("1_2x7gc")
+roughness = 0.6
+normal_enabled = true
+normal_scale = -1.0
+normal_texture = ExtResource("2_3424d")
+bent_normal_enabled = true
+bent_normal_texture = ExtResource("2_3424d")
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
+material = SubResource("StandardMaterial3D_2luw2")
 size = Vector2(8, 8)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_psf7b"]
@@ -21,8 +30,7 @@ size = Vector3(1, 0.045, 1)
 transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
 
 [node name="GroundPlane" type="MeshInstance3D" parent="."]
-transform = Transform3D(18.445, 0, 0, 0, 18.445, 0, 0, 0, 18.445, 0.023437487, -0.024009705, -0.30892944)
-material_override = SubResource("StandardMaterial3D_ig7tw")
+transform = Transform3D(18.445, 0, 0, 0, 18.445, 0, 0, 0, 18.445, 0.0234375, 0.01411888, -0.008929432)
 mesh = SubResource("PlaneMesh_h2yge")
 skeleton = NodePath("../..")
 
