@@ -3,6 +3,7 @@ const SPEED = 5.0
 
 @onready var meshes = $Meshes  # Reference to your Meshes node
 @onready var weapon = $Gun
+@onready var SFXPlayer = $PlayerSFX
 # facing direction
 signal facing_direction_changed(new_direction: Vector3)
 
@@ -16,19 +17,40 @@ enum State {
 	AIMING,
 	SHOOTING
 }
+@export var max_hp = 10
+@export var max_ammo = 12
+@export var max_sway = 12
+
+var hp = max_hp:
+	set(value):
+		hp = value
+		health_changed.emit()
+var ammo = max_ammo:
+	set(value):
+		ammo = value
+		ammo_changed.emit()
+var sway = max_sway
+var has_ammo = ammo>0
+# signals
+signal health_changed
+signal ammo_changed
+signal player_died
 
 func _ready() -> void:
+	hp=max_hp
 	facing_direction_changed.connect(weapon._on_facing_direction_changed)
+	add_to_group("player")
 # Physics update
 func _physics_process(delta: float) -> void:
-	var direction = Input.get_vector("move_down", "move_up", "move_left", "move_right")
+	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	velocity = Vector3(direction.x, 0, direction.y) * 10
 	if (velocity.x!=0 or velocity.z!=0):
 		player_state=State.MOVING
+		SFXPlayer.startStepTimer()
 	else:
 		player_state=State.IDLE
+		SFXPlayer.stopStepTimer()
 	move_and_slide()
-	#print(velocity)
 	
 	
 func _process(delta: float) -> void:
@@ -62,8 +84,47 @@ func _handle_input():
 			player_state=State.AIMING
 			weapon._aim()
 		if Input.is_action_just_pressed("shoot") and player_state==State.AIMING:
-			player_state=State.SHOOTING
-			weapon._shoot()
+			if (has_ammo):
+				player_state=State.SHOOTING
+				weapon._shoot()
+				reduce_ammo()
+				SFXPlayer.playShot()
+			else:
+				SFXPlayer.playDryfire()
+				
+			
+			
+func heal(heal_amt):
+	hp=min((hp+heal_amt), max_hp)
+	SFXPlayer.playHeal()
+
+func increase_ammo(ammo_amt):
+	ammo = min(ammo+ammo_amt, max_ammo)
+	has_ammo=true
+	SFXPlayer.playReload() 
+
+func take_damage(damage):
+	print("took damage: ", damage)
+	hp = hp-damage
+	if hp<=0:
+		die()
+	else:
+		SFXPlayer.playDamage()
+
+func reduce_ammo():
+	if has_ammo:
+		ammo = ammo -1
+		if ammo<=0:
+			has_ammo=false
+		
+
+func die():
+	player_died.emit()
+	set_physics_process(false)
+	set_process_input(false)	
+	
+func is_aiming():
+	return player_state==State.AIMING
 
 func _aim():
 	pass

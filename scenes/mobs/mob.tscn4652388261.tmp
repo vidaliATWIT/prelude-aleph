@@ -38,7 +38,7 @@ script = ExtResource("2_s6b6g")
 [node name="AttackPlayer" type="AudioStreamPlayer3D" parent="TickSFX"]
 
 [node name="StepTimer" type="Timer" parent="TickSFX"]
-wait_time = 0.33
+wait_time = 0.1
 autostart = true
 
 [connection signal="timeout" from="TickSFX/StepTimer" to="TickSFX" method="_on_step_timer_timeout"]

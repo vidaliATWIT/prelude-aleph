@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=3 uid="uid://delwumbtej0cc"]
+
+[ext_resource type="PackedScene" uid="uid://h12lf3rfcaje" path="res://art/3d_renders/items/ammo.glb" id="1_3raeh"]
+[ext_resource type="Script" uid="uid://odrw6cpdijbi" path="res://scripts/pickup_item.gd" id="1_lty2n"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_3raeh"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_lty2n"]
+
+[node name="AmmoPickup" type="StaticBody3D"]
+script = ExtResource("1_lty2n")
+pickup_type = "AMMO"
+min = 1
+max = 6
+
+[node name="ammo" parent="." instance=ExtResource("1_3raeh")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+
+[node name="AmmoCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0.5849209, 0)
+shape = SubResource("BoxShape3D_3raeh")
+
+[node name="InteractArea" type="Area3D" parent="."]
+
+[node name="InteractCollider" type="CollisionShape3D" parent="InteractArea"]
+transform = Transform3D(1.5, 0, 0, 0, 1.5, 0, 0, 0, 1.5, 0, 0.595, 0)
+shape = SubResource("BoxShape3D_lty2n")
+
+[connection signal="body_entered" from="InteractArea" to="." method="_on_interact_area_body_entered"]
+[connection signal="body_exited" from="InteractArea" to="." method="_on_interact_area_body_exited"]

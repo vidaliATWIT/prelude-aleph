@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://deyiwxmivrrey"]
+[gd_scene load_steps=7 format=3 uid="uid://deyiwxmivrrey"]
 
 [ext_resource type="Script" uid="uid://c7ocr3ir2a3pf" path="res://scripts/player.gd" id="1_3hfu2"]
 [ext_resource type="Script" uid="uid://cd67pbd42aewg" path="res://scripts/gun.gd" id="2_ar13e"]
 [ext_resource type="PackedScene" uid="uid://ddhmq5t0ada46" path="res://saa.tscn" id="2_mjudt"]
+[ext_resource type="Script" uid="uid://bxjs7bck8ax4d" path="res://scripts/sound/PlayerSFX.gd" id="4_ar13e"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7dm0k"]
 
@@ -20,6 +21,11 @@ script = ExtResource("2_ar13e")
 [node name="SAA4" parent="Gun" instance=ExtResource("2_mjudt")]
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0.9769592)
 
+[node name="SwayTimer" type="Timer" parent="Gun"]
+unique_name_in_owner = true
+wait_time = 0.3
+autostart = true
+
 [node name="Meshes" type="Node3D" parent="."]
 
 [node name="PlayerMesh" type="Node3D" parent="Meshes"]
@@ -29,7 +35,24 @@ mesh = SubResource("CapsuleMesh_7dm0k")
 skeleton = NodePath("../../..")
 
 [node name="GameCamera" type="Camera3D" parent="."]
-transform = Transform3D(-4.3711385e-08, 0.70710677, -0.7071068, 0, 0.7071068, 0.70710677, 1, 3.0908616e-08, -3.090862e-08, -4.689575, 4.960205, 0)
-projection = 1
+transform = Transform3D(1, -3.5527137e-15, 3.5527137e-15, 0, 0.7071068, 0.70710677, -3.5527137e-15, -0.70710677, 0.7071068, 0, 4.96, 4.69)
 size = 8.684
 near = 0.001
+
+[node name="PlayerSFX" type="Node" parent="."]
+script = ExtResource("4_ar13e")
+
+[node name="DamagePlayer" type="AudioStreamPlayer" parent="PlayerSFX"]
+
+[node name="FootstepPlayer" type="AudioStreamPlayer" parent="PlayerSFX"]
+
+[node name="GunshotPlayer" type="AudioStreamPlayer" parent="PlayerSFX"]
+
+[node name="HealthPlayer" type="AudioStreamPlayer" parent="PlayerSFX"]
+
+[node name="StepTimer" type="Timer" parent="PlayerSFX"]
+unique_name_in_owner = true
+wait_time = 0.3
+
+[connection signal="timeout" from="Gun/SwayTimer" to="Gun" method="_on_sway_timer_timeout"]
+[connection signal="timeout" from="PlayerSFX/StepTimer" to="PlayerSFX" method="_on_step_timer_timeout"]

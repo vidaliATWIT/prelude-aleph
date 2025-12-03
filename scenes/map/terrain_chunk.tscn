@@ -1,0 +1,66 @@
+[gd_scene load_steps=10 format=3 uid="uid://e7tc3vs1jc76"]
+
+[ext_resource type="Texture2D" uid="uid://drt3txhfs4m13" path="res://art/textures/Seamless-Oak-Texture-1536x1152.jpg" id="1_psf7b"]
+[ext_resource type="Script" uid="uid://yuwtensimsvm" path="res://scripts/prop_randomizer.gd" id="2_ft172"]
+[ext_resource type="PackedScene" uid="uid://b51b508yte67" path="res://scenes/pickups/health_pickup.tscn" id="3_2x7gc"]
+[ext_resource type="PackedScene" uid="uid://delwumbtej0cc" path="res://scenes/pickups/ammo_pickup.tscn" id="4_17wl8"]
+[ext_resource type="PackedScene" uid="uid://c71lyexatjty1" path="res://scenes/decorations/tree.tscn" id="5_3424d"]
+[ext_resource type="Script" uid="uid://dl10g5xxq4n7t" path="res://scenes/map/chunk_area.gd" id="6_ft172"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
+albedo_texture = ExtResource("1_psf7b")
+emission_enabled = true
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
+size = Vector2(8, 8)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_psf7b"]
+size = Vector3(1, 0.045, 1)
+
+[node name="TerrainChunk" type="Node3D"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="GroundPlane" type="MeshInstance3D" parent="."]
+transform = Transform3D(18.445, 0, 0, 0, 18.445, 0, 0, 0, 18.445, 0.023437487, -0.024009705, -0.30892944)
+material_override = SubResource("StandardMaterial3D_ig7tw")
+mesh = SubResource("PlaneMesh_h2yge")
+skeleton = NodePath("../..")
+
+[node name="Props" type="Node3D" parent="." node_paths=PackedStringArray("prop_spawn_points")]
+script = ExtResource("2_ft172")
+prop_scenes = Array[PackedScene]([ExtResource("3_2x7gc"), ExtResource("4_17wl8"), ExtResource("5_3424d")])
+prop_spawn_points = [NodePath("Prop1"), NodePath("Prop2"), NodePath("Prop3"), NodePath("Prop4"), NodePath("Prop5"), NodePath("Prop6"), NodePath("Prop7"), NodePath("Prop8")]
+jitter_range = 20.0
+
+[node name="Prop1" type="Node3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0, 36)
+
+[node name="Prop2" type="Node3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0, 0)
+
+[node name="Prop3" type="Node3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36, 0, -36)
+
+[node name="Prop4" type="Node3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 36)
+
+[node name="Prop5" type="Node3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -36)
+
+[node name="Prop6" type="Node3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, 36)
+
+[node name="Prop7" type="Node3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, 0)
+
+[node name="Prop8" type="Node3D" parent="Props"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36, 0, -36)
+
+[node name="ChunkArea" type="Area3D" parent="."]
+script = ExtResource("6_ft172")
+
+[node name="ChunkCollider" type="CollisionShape3D" parent="ChunkArea"]
+transform = Transform3D(147, 0, 0, 0, 147, 0, 0, 0, 147, 0, 0.595, 0)
+shape = SubResource("BoxShape3D_psf7b")
+
+[connection signal="body_entered" from="ChunkArea" to="ChunkArea" method="_on_body_entered"]
