@@ -1,10 +1,10 @@
-[gd_scene load_steps=8 format=3 uid="uid://dhx7rvh3080wj"]
+[gd_scene load_steps=10 format=3 uid="uid://dhx7rvh3080wj"]
 
 [ext_resource type="Script" uid="uid://brd4xyi80fpp7" path="res://game_manager.gd" id="1_1bvp3"]
-[ext_resource type="PackedScene" uid="uid://deyiwxmivrrey" path="res://scenes/characters/player_character.tscn" id="1_ig7tw"]
-[ext_resource type="Script" uid="uid://cmildeptdk6ok" path="res://scripts/player_hud.gd" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://deyiwxmivrrey" path="res://scenes/player/player_character.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://cmildeptdk6ok" path="res://scripts/player/player_hud.gd" id="2_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://e7tc3vs1jc76" path="res://scenes/map/terrain_chunk.tscn" id="4_1bvp3"]
-[ext_resource type="Script" uid="uid://c1juu2v73j4ct" path="res://scripts/map_manager.gd" id="5_lquwl"]
+[ext_resource type="Script" uid="uid://c1juu2v73j4ct" path="res://scripts/map/map_manager.gd" id="5_lquwl"]
 
 [sub_resource type="Curve3D" id="Curve3D_h2yge"]
 closed = true
@@ -17,6 +17,11 @@ point_count = 4
 [sub_resource type="LabelSettings" id="LabelSettings_1bvp3"]
 font_size = 64
 
+[sub_resource type="BoxShape3D" id="BoxShape3D_lquwl"]
+size = Vector3(1, 10, 44)
+
+[sub_resource type="BoxMesh" id="BoxMesh_lquwl"]
+
 [node name="main" type="Node"]
 
 [node name="PlayerCharacter" parent="." instance=ExtResource("1_ig7tw")]
@@ -24,7 +29,7 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="MonsterSpawner" type="Path3D" parent="PlayerCharacter"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0, -7)
 curve = SubResource("Curve3D_h2yge")
 
 [node name="FollowPath" type="PathFollow3D" parent="PlayerCharacter/MonsterSpawner"]
@@ -105,6 +110,20 @@ horizontal_alignment = 2
 script = ExtResource("5_lquwl")
 terrain_chunk = ExtResource("4_1bvp3")
 chunk_size = 147.5
+
+[node name="BerlinWall" type="StaticBody3D" parent="."]
+visible = false
+collision_layer = 4
+collision_mask = 3
+
+[node name="BerlinWall" type="CollisionShape3D" parent="BerlinWall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7, 4.5, -5.8778076)
+shape = SubResource("BoxShape3D_lquwl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="BerlinWall"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 45, -7, 0, -6)
+layers = 4
+mesh = SubResource("BoxMesh_lquwl")
 
 [connection signal="timeout" from="GameManager/KillStreakTimer" to="GameManager" method="_on_kill_streak_timer_timeout"]
 [connection signal="timeout" from="GameManager/ShortTimer" to="GameManager" method="_on_short_timer_timeout"]

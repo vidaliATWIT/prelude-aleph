@@ -5,6 +5,8 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_lquwl"]
 
 [node name="Tree" type="StaticBody3D"]
+collision_layer = 4
+collision_mask = 4
 
 [node name="TreeModel" parent="." instance=ExtResource("1_l0ntb")]
 transform = Transform3D(1.8, 0, 0, 0, 1.8, 0, 0, 0, 1.8, 0, 0, 0)

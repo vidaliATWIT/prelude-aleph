@@ -22,22 +22,32 @@ func _ready():
 	attack_range = $AttackRange
 	attack_range.body_entered.connect(_on_body_entered_attack_range)
 	attack_range.body_exited.connect(_on_body_exited_attack_range)
+	add_to_group("enemies")
 
 func _physics_process(delta):
 	var direction = global_position.direction_to(player.global_position)
 	direction.y = 0  # Flatten to horizontal plane
-	direction = direction.normalized()  # Re-normalize after zeroing Y
+	direction = direction.normalized()
+	
 	var distance = global_position.distance_to(player.global_position)
+	
+	# Check line of sight
+	if not has_line_of_sight():
+		# Strafe left to find clear sight
+		var right_vector = direction.cross(Vector3.UP).normalized()
+		direction = -right_vector*2.0  # Move left (negative of right)
+	
 	var normalized_dist = clamp(distance / max_distance, 0.0, 1.0)
-	speed = lerp(max_speed, min_speed, normalized_dist * normalized_dist)  # Square for curve
+	speed = lerp(max_speed, min_speed, normalized_dist * normalized_dist)
 	velocity = direction * speed
-	if (velocity.length()>0):
+	
+	if (velocity.length() > 0):
 		SFXPlayer.startStepTimer()
 	else:
 		SFXPlayer.stopStepTimer()
 		
 	move_and_slide()
-	attack() 
+	attack()
 
 func _on_hit(damage):
 	print("_ONHIT")
@@ -63,7 +73,26 @@ func attack():
 		can_attack = false
 		await get_tree().create_timer(attack_cooldown).timeout
 		can_attack = true
-
+		
+func has_line_of_sight() -> bool:
+	var space_state = get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.create(
+		global_position,
+		player.global_position
+	)
+	
+	# Only collide with player and obstacles, ignore enemies
+	query.collision_mask = 0b101  # Binary: layers 1 and 3 (player + obstacles)
+	
+	var result = space_state.intersect_ray(query)
+	
+	# If raycast hits nothing, or hits the player, we have line of sight
+	if result.is_empty():
+		return true
+	if result.collider == player:
+		return true
+	
+	return false
 func _on_body_entered_attack_range(body):
 	if body.is_in_group("player"):
 		player_in_range = true

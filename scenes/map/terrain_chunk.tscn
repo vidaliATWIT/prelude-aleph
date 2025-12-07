@@ -1,31 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://e7tc3vs1jc76"]
+[gd_scene load_steps=8 format=3 uid="uid://e7tc3vs1jc76"]
 
 [ext_resource type="PackedScene" uid="uid://cw6l5u836ypnl" path="res://art/3d_renders/dirt.glb" id="1_17wl8"]
-[ext_resource type="Script" uid="uid://yuwtensimsvm" path="res://scripts/prop_randomizer.gd" id="2_ft172"]
+[ext_resource type="Script" uid="uid://yuwtensimsvm" path="res://scripts/map/prop_randomizer.gd" id="2_ft172"]
 [ext_resource type="PackedScene" uid="uid://b51b508yte67" path="res://scenes/pickups/health_pickup.tscn" id="3_2x7gc"]
 [ext_resource type="PackedScene" uid="uid://delwumbtej0cc" path="res://scenes/pickups/ammo_pickup.tscn" id="4_17wl8"]
 [ext_resource type="PackedScene" uid="uid://c71lyexatjty1" path="res://scenes/decorations/tree.tscn" id="5_3424d"]
-[ext_resource type="Script" uid="uid://dl10g5xxq4n7t" path="res://scenes/map/chunk_area.gd" id="6_ft172"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_ft172"]
-load_path = "res://.godot/imported/dirt.png-5095586bce7a1f4fe3bb4bd879f7ff21.s3tc.ctex"
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_2x7gc"]
-load_path = "res://.godot/imported/noise2.jpg-30416b6f179b84a7847f5024ca124c8d.s3tc.ctex"
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2luw2"]
-diffuse_mode = 1
-specular_mode = 1
-albedo_texture = SubResource("CompressedTexture2D_ft172")
-normal_enabled = true
-normal_scale = -1.0
-normal_texture = SubResource("CompressedTexture2D_2x7gc")
-bent_normal_enabled = true
-bent_normal_texture = SubResource("CompressedTexture2D_2x7gc")
-
-[sub_resource type="PlaneMesh" id="PlaneMesh_h2yge"]
-material = SubResource("StandardMaterial3D_2luw2")
-size = Vector2(8, 8)
+[ext_resource type="Script" uid="uid://dl10g5xxq4n7t" path="res://scripts/map/chunk_area.gd" id="6_ft172"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_psf7b"]
 size = Vector3(1, 0.045, 1)
@@ -35,12 +15,6 @@ transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0
 
 [node name="dirt" parent="." instance=ExtResource("1_17wl8")]
 transform = Transform3D(18.45, 0, 0, 0, 18.45, 0, 0, 0, 18.45, 0, 0, 0)
-
-[node name="GroundPlane" type="MeshInstance3D" parent="."]
-transform = Transform3D(18.445, 0, 0, 0, 18.445, 0, 0, 0, 18.445, 0.0234375, 0.01411888, -0.008929432)
-visible = false
-mesh = SubResource("PlaneMesh_h2yge")
-skeleton = NodePath("../..")
 
 [node name="Props" type="Node3D" parent="." node_paths=PackedStringArray("prop_spawn_points")]
 script = ExtResource("2_ft172")
