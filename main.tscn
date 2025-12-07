@@ -24,6 +24,7 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="MonsterSpawner" type="Path3D" parent="PlayerCharacter"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -7)
 curve = SubResource("Curve3D_h2yge")
 
 [node name="FollowPath" type="PathFollow3D" parent="PlayerCharacter/MonsterSpawner"]
@@ -55,6 +56,9 @@ directional_shadow_mode = 0
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource("1_1bvp3")
 
+[node name="KillStreakTimer" type="Timer" parent="GameManager"]
+one_shot = true
+
 [node name="ShortTimer" type="Timer" parent="GameManager"]
 unique_name_in_owner = true
 wait_time = 0.3
@@ -83,10 +87,25 @@ label_settings = SubResource("LabelSettings_1bvp3")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="ScoreContainer" type="VBoxContainer" parent="GameManager/GameHUD"]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="ScoreLabel" type="Label" parent="GameManager/GameHUD/ScoreContainer"]
+layout_mode = 2
+text = "Score: 0"
+horizontal_alignment = 2
+
+[node name="KillstreakLabel" type="Label" parent="GameManager/GameHUD/ScoreContainer"]
+layout_mode = 2
+horizontal_alignment = 2
+
 [node name="MapManager" type="Node" parent="."]
 script = ExtResource("5_lquwl")
 terrain_chunk = ExtResource("4_1bvp3")
 chunk_size = 147.5
 
+[connection signal="timeout" from="GameManager/KillStreakTimer" to="GameManager" method="_on_kill_streak_timer_timeout"]
 [connection signal="timeout" from="GameManager/ShortTimer" to="GameManager" method="_on_short_timer_timeout"]
 [connection signal="timeout" from="GameManager/LongTimer" to="GameManager" method="_on_long_timer_timeout"]

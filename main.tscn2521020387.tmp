@@ -1,0 +1,111 @@
+[gd_scene load_steps=8 format=3 uid="uid://dhx7rvh3080wj"]
+
+[ext_resource type="Script" uid="uid://brd4xyi80fpp7" path="res://game_manager.gd" id="1_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://deyiwxmivrrey" path="res://scenes/characters/player_character.tscn" id="1_ig7tw"]
+[ext_resource type="Script" uid="uid://cmildeptdk6ok" path="res://scripts/player_hud.gd" id="2_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://e7tc3vs1jc76" path="res://scenes/map/terrain_chunk.tscn" id="4_1bvp3"]
+[ext_resource type="Script" uid="uid://c1juu2v73j4ct" path="res://scripts/map_manager.gd" id="5_lquwl"]
+
+[sub_resource type="Curve3D" id="Curve3D_h2yge"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -19, 0, -19, 0, 0, 0, 0, 0, 0, 19, 0, -19, 0, 0, 0, 0, 0, 0, 19, 0, 19, 0, 0, 0, 0, 0, 0, -19, 0, 19),
+"tilts": PackedFloat32Array(0, 0, 0, 0)
+}
+point_count = 4
+
+[sub_resource type="LabelSettings" id="LabelSettings_1bvp3"]
+font_size = 64
+
+[node name="main" type="Node"]
+
+[node name="PlayerCharacter" parent="." instance=ExtResource("1_ig7tw")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+
+[node name="MonsterSpawner" type="Path3D" parent="PlayerCharacter"]
+transform = Transform3D(2.5, 0, 0, 0, 2.5, 0, 0, 0, 2.5, 0, 0, 0)
+curve = SubResource("Curve3D_h2yge")
+
+[node name="FollowPath" type="PathFollow3D" parent="PlayerCharacter/MonsterSpawner"]
+unique_name_in_owner = true
+transform = Transform3D(-4.3710692e-08, 0, -0.99999034, 0, 0.99999267, 0, 0.9999841, 0, -4.3710966e-08, -19, 0, -19)
+
+[node name="PlayerHUD" type="Control" parent="PlayerCharacter"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+script = ExtResource("2_1bvp3")
+
+[node name="HudContainer" type="VBoxContainer" parent="PlayerCharacter/PlayerHUD"]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="HPLabel" type="Label" parent="PlayerCharacter/PlayerHUD/HudContainer"]
+layout_mode = 2
+
+[node name="AmmoLabel" type="Label" parent="PlayerCharacter/PlayerHUD/HudContainer"]
+layout_mode = 2
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1.0000001, -3.090862e-08, -1.2802765e-08, 3.090862e-08, 0.7071068, 0.7071068, -1.2802769e-08, -0.70710677, 0.70710677, -17, 8, 0)
+directional_shadow_mode = 0
+
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("1_1bvp3")
+
+[node name="KillStreakTimer" type="Timer" parent="GameManager"]
+one_shot = true
+
+[node name="ShortTimer" type="Timer" parent="GameManager"]
+unique_name_in_owner = true
+wait_time = 0.3
+autostart = true
+
+[node name="LongTimer" type="Timer" parent="GameManager"]
+wait_time = 10.0
+autostart = true
+
+[node name="GameHUD" type="Control" parent="GameManager"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="HudContainer" type="VBoxContainer" parent="GameManager/GameHUD"]
+layout_mode = 0
+offset_top = 256.0
+offset_right = 1152.0
+offset_bottom = 364.0
+
+[node name="GameOverLabel" type="Label" parent="GameManager/GameHUD/HudContainer"]
+layout_mode = 2
+text = "GAME OVER"
+label_settings = SubResource("LabelSettings_1bvp3")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ScoreContainer" type="VBoxContainer" parent="GameManager/GameHUD"]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="ScoreLabel" type="Label" parent="GameManager/GameHUD/ScoreContainer"]
+layout_mode = 2
+text = "Score: 0"
+horizontal_alignment = 2
+
+[node name="KillstreakLabel" type="Label" parent="GameManager/GameHUD/ScoreContainer"]
+layout_mode = 2
+horizontal_alignment = 2
+
+[node name="MapManager" type="Node" parent="."]
+script = ExtResource("5_lquwl")
+terrain_chunk = ExtResource("4_1bvp3")
+chunk_size = 147.5
+
+[connection signal="timeout" from="GameManager/KillStreakTimer" to="GameManager" method="_on_kill_streak_timer_timeout"]
+[connection signal="timeout" from="GameManager/ShortTimer" to="GameManager" method="_on_short_timer_timeout"]
+[connection signal="timeout" from="GameManager/LongTimer" to="GameManager" method="_on_long_timer_timeout"]

@@ -15,6 +15,8 @@ var max_distance = 20.0
 
 @onready var SFXPlayer = $TickSFX
 
+signal mob_died
+
 func _ready():
 	player = get_node("/root/main/PlayerCharacter")
 	attack_range = $AttackRange
@@ -42,6 +44,7 @@ func _on_hit(damage):
 	hp-=damage
 	if hp<=0:
 		SFXPlayer.playDeath()
+		mob_died.emit()
 		queue_free()
 	else:
 		SFXPlayer.playDamage()

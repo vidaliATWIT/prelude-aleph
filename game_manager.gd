@@ -2,13 +2,27 @@ extends Node
 
 var mobs_spawned = 0
 const MAX_MOBS_PER_WAVE = 5
+var kill_streak = 0
+var streak_window = 2.0
+
 @onready var player = %PlayerCharacter
 @onready var game_over_label = $GameHUD/HudContainer/GameOverLabel
+@onready var score_label = $GameHUD/ScoreContainer/ScoreLabel
+@onready var streak_label = $GameHUD/ScoreContainer/KillstreakLabel
+@onready var dead_mob_count = 0
+@onready var points = 0
+@onready var kill_streak_timer = $KillStreakTimer
 @export var spawn_monsters = true
+
+
+
 
 func _ready() -> void:
 	game_over_label.visible=false
 	player.player_died.connect(on_player_died)
+	dead_mob_count=0
+	points = 0
+	kill_streak=0
 
 func spawn_mob():
 	var spawn_position = get_valid_spawn_position()
@@ -18,6 +32,7 @@ func spawn_mob():
 		return
 	var new_mob = preload("res://scenes/mobs/mob.tscn").instantiate()
 	new_mob.global_position = spawn_position
+	new_mob.mob_died.connect(_on_mob_died)
 	add_child(new_mob)
 	mobs_spawned += 1
 	
@@ -69,3 +84,34 @@ func on_player_died():
 	await get_tree().create_timer(1.5).timeout
 	get_tree().paused = false  # Unpause before changing scene
 	get_tree().reload_current_scene()	
+	
+func _on_mob_died():
+	dead_mob_count += 1
+	kill_streak += 1
+	
+	kill_streak_timer.start(streak_window)
+	
+	var multiplier = 1
+	var streak_text=""
+	if kill_streak >= 5:
+		multiplier = 5
+		streak_text = "BABABOOEY!"
+	elif kill_streak >= 4:
+		multiplier = 4
+		streak_text = "UBER KILL!"
+	elif kill_streak >= 3:
+		multiplier = 3
+		streak_text = "TRIPLE KILL!"
+	elif kill_streak >= 2:
+		multiplier = 2
+		streak_text = "DOUBLE KILL!"
+	points+=10 * multiplier
+	score_label.text = "Score: " + str(points)
+	if streak_text != "":
+		streak_label.text=streak_text
+	print("Mobs defeated: ", dead_mob_count)
+
+
+func _on_kill_streak_timer_timeout() -> void:
+	kill_streak = 0
+	streak_label.text=""

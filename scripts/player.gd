@@ -4,6 +4,8 @@ const SPEED = 5.0
 @onready var meshes = $Meshes  # Reference to your Meshes node
 @onready var weapon = $Gun
 @onready var SFXPlayer = $PlayerSFX
+@onready var camera = $GameCamera
+
 # facing direction
 signal facing_direction_changed(new_direction: Vector3)
 
@@ -110,6 +112,27 @@ func take_damage(damage):
 		die()
 	else:
 		SFXPlayer.playDamage()
+		camera_shake()
+	
+
+func camera_shake():
+	var shake_strength = 0.075
+	var shake_duration = 0.2
+	var shake_interval = 0.05
+	
+	var original_position = camera.position
+	var elapsed = 0.0
+	
+	while elapsed < shake_duration:
+		camera.position = original_position + Vector3(
+			randf_range(-shake_strength, shake_strength),
+			randf_range(-shake_strength, shake_strength),
+			randf_range(-shake_strength, shake_strength)
+		)
+		await get_tree().create_timer(shake_interval).timeout
+		elapsed += shake_interval
+	
+	camera.position = original_position
 
 func reduce_ammo():
 	if has_ammo:

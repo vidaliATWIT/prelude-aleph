@@ -15,8 +15,8 @@ func _on_interact_area_body_entered(body: Node3D) -> void:
 				print("Picked up heal: ", rand_val)
 				body.heal(rand_val)
 			elif pickup_type=="AMMO":
-				print("Picked up ammo: ", rand_val)
-				body.increase_ammo(rand_val)
+				print("Picked up ammo: ", 12)
+				body.increase_ammo(12)
 			queue_free()
 
 
