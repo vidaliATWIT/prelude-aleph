@@ -13,6 +13,9 @@
 collision_mask = 6
 script = ExtResource("1_3hfu2")
 
+[node name="TrappedTimer" type="Timer" parent="."]
+wait_time = 0.5
+
 [node name="PillCollider" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_7dm0k")
 
@@ -55,5 +58,6 @@ script = ExtResource("4_ar13e")
 unique_name_in_owner = true
 wait_time = 0.3
 
+[connection signal="timeout" from="TrappedTimer" to="." method="_on_trapped_timer_timeout"]
 [connection signal="timeout" from="Gun/SwayTimer" to="Gun" method="_on_sway_timer_timeout"]
 [connection signal="timeout" from="PlayerSFX/StepTimer" to="PlayerSFX" method="_on_step_timer_timeout"]

@@ -16,7 +16,8 @@ var sound_dict = {
 	"dmg2": preload("res://sounds/sfx/medpain_02.ogg"),
 	"dmg3": preload("res://sounds/sfx/medpain_03.ogg"),
 	"death": preload("res://sounds/sfx/death_03.ogg"),
-	"hit": preload("res://sounds/sfx/tick/hit_05.ogg")
+	"hit": preload("res://sounds/sfx/tick/hit_05.ogg"),
+	"trapped": preload("res://sounds/sfx/dfury_sight.wav"),
 }
 
 var step_num = 0
@@ -31,6 +32,8 @@ func playReload():
 	
 func playHeal():
 	playSound(HealthPlayer, "heal")
+func playTrapped():
+	playSound(HealthPlayer,"trapped")
 	
 
 # Randomize

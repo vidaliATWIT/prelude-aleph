@@ -35,7 +35,7 @@ func _physics_process(delta):
 	if not has_line_of_sight():
 		# Strafe left to find clear sight
 		var right_vector = direction.cross(Vector3.UP).normalized()
-		direction = -right_vector*2.0  # Move left (negative of right)
+		direction = -right_vector*2.0  
 	
 	var normalized_dist = clamp(distance / max_distance, 0.0, 1.0)
 	speed = lerp(max_speed, min_speed, normalized_dist * normalized_dist)
@@ -58,6 +58,7 @@ func _on_hit(damage):
 		queue_free()
 	else:
 		SFXPlayer.playDamage()
+		shake()
 		
 
 # Todo: Make sure you can't hit if behind a wall
@@ -93,6 +94,26 @@ func has_line_of_sight() -> bool:
 		return true
 	
 	return false
+	
+func shake():
+	var shake_strength = 0.05
+	var shake_duration = 0.2
+	var shake_interval = 0.05
+	
+	var original_position = global_position
+	var elapsed = 0.0
+	
+	while elapsed < shake_duration:
+		global_position = original_position + Vector3(
+			randf_range(-shake_strength, shake_strength),
+			0.0,
+			randf_range(-shake_strength, shake_strength)
+		)
+		await get_tree().create_timer(shake_interval).timeout
+		elapsed += shake_interval
+	
+	global_position = original_position
+	
 func _on_body_entered_attack_range(body):
 	if body.is_in_group("player"):
 		player_in_range = true

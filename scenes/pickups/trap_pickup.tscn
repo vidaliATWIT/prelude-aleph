@@ -1,0 +1,37 @@
+[gd_scene load_steps=6 format=3 uid="uid://bv2v157pd5muo"]
+
+[ext_resource type="Script" uid="uid://odrw6cpdijbi" path="res://scripts/pickups/pickup_item.gd" id="1_5omss"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7mycd"]
+albedo_color = Color(1, 0, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_7mycd"]
+material = SubResource("StandardMaterial3D_7mycd")
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kek77"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_4c57u"]
+
+[node name="TrapPickup" type="StaticBody3D"]
+script = ExtResource("1_5omss")
+pickup_type = "TRAP"
+min = 10
+max = 100
+
+[node name="Trap" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+
+[node name="TrapBox" type="MeshInstance3D" parent="Trap"]
+mesh = SubResource("BoxMesh_7mycd")
+
+[node name="PickupCollider" type="CollisionShape3D" parent="."]
+transform = Transform3D(1.1, 0, 0, 0, 1.1, 0, 0, 0, 1.1, 0, 0.5849209, 0)
+shape = SubResource("BoxShape3D_kek77")
+
+[node name="InteractArea" type="Area3D" parent="."]
+
+[node name="InteractCollider" type="CollisionShape3D" parent="InteractArea"]
+transform = Transform3D(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0.595, 0)
+shape = SubResource("BoxShape3D_4c57u")
+
+[connection signal="body_entered" from="InteractArea" to="." method="_on_interact_area_body_entered"]

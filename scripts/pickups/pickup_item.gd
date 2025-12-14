@@ -17,6 +17,9 @@ func _on_interact_area_body_entered(body: Node3D) -> void:
 			elif pickup_type=="AMMO":
 				print("Picked up ammo: ", 12)
 				body.increase_ammo(12)
+			elif pickup_type=="TRAP":
+				print("Trapped: ", 12)
+				body.stop_movement(rand_val)
 			queue_free()
 
 

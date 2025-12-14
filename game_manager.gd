@@ -9,6 +9,7 @@ var streak_window = 2.0
 @onready var game_over_label = $GameHUD/HudContainer/GameOverLabel
 @onready var score_label = $GameHUD/ScoreContainer/ScoreLabel
 @onready var streak_label = $GameHUD/ScoreContainer/KillstreakLabel
+@onready var status_label = $GameHUD/StatusContainer/StatusLabel
 @onready var dead_mob_count = 0
 @onready var points = 0
 @onready var kill_streak_timer = $KillStreakTimer
@@ -20,6 +21,8 @@ var streak_window = 2.0
 func _ready() -> void:
 	game_over_label.visible=false
 	player.player_died.connect(on_player_died)
+	player.player_trapped.connect(on_player_trapped)
+	player.player_freed.connect(on_player_freed)
 	dead_mob_count=0
 	points = 0
 	kill_streak=0
@@ -84,6 +87,12 @@ func on_player_died():
 	await get_tree().create_timer(1.5).timeout
 	get_tree().paused = false  # Unpause before changing scene
 	get_tree().reload_current_scene()	
+	
+func on_player_trapped():
+	status_label.visible=true
+	
+func on_player_freed():
+	status_label.visible=false
 	
 func _on_mob_died():
 	dead_mob_count += 1

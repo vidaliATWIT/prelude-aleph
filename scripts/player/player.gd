@@ -5,6 +5,7 @@ const SPEED = 5.0
 @onready var weapon = $Gun
 @onready var SFXPlayer = $PlayerSFX
 @onready var camera = $GameCamera
+@onready var trapped_timer = $TrappedTimer
 
 # facing direction
 signal facing_direction_changed(new_direction: Vector3)
@@ -22,6 +23,7 @@ enum State {
 @export var max_hp = 10
 @export var max_ammo = 12
 @export var max_sway = 12
+@onready var can_move=true
 
 var hp = max_hp:
 	set(value):
@@ -37,6 +39,8 @@ var has_ammo = ammo>0
 signal health_changed
 signal ammo_changed
 signal player_died
+signal player_trapped
+signal player_freed
 
 func _ready() -> void:
 	hp=max_hp
@@ -45,7 +49,10 @@ func _ready() -> void:
 # Physics update
 func _physics_process(delta: float) -> void:
 	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
-	velocity = Vector3(direction.x, 0, direction.y) * 10
+	if (can_move):
+		velocity = Vector3(direction.x, 0, direction.y) * 10
+	else:
+		velocity = Vector3(0, 0, 0)
 	if (velocity.x!=0 or velocity.z!=0):
 		player_state=State.MOVING
 		SFXPlayer.startStepTimer()
@@ -148,6 +155,14 @@ func die():
 	
 func is_aiming():
 	return player_state==State.AIMING
+	
+func stop_movement(rand_num):
+	player_trapped.emit()
+	SFXPlayer.playTrapped()
+	trapped_timer.wait_time=rand_num*.01
+	can_move=false
+	trapped_timer.start()
+	
 
 func _aim():
 	pass
@@ -155,3 +170,9 @@ func _shoot():
 	pass
 func _move():
 	pass
+
+func _on_trapped_timer_timeout() -> void:
+	player_freed.emit()
+	trapped_timer.stop()
+	can_move=true
+	print("FREE")
