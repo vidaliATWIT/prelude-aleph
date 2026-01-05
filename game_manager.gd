@@ -26,6 +26,7 @@ func _ready() -> void:
 	dead_mob_count=0
 	points = 0
 	kill_streak=0
+	
 
 func spawn_mob():
 	var spawn_position = get_valid_spawn_position()
