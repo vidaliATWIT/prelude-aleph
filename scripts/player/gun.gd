@@ -2,9 +2,10 @@ class_name Gun
 extends Node3D
 var player
 var damage = 3
+@onready var gun_model = %SAA4
 func _ready():
 	player = get_node("/root/main/PlayerCharacter")
-
+	max_sway = .2
 @export var shooting_range: float = 1000.0
 var shoot_direction: Vector3 = Vector3.FORWARD
 var swayed_direction = shoot_direction
@@ -21,7 +22,7 @@ func _aim():
 	calculate_swayed_direction()
 	var ray_end = ray_start + swayed_direction  * shooting_range
 	
-	draw_debug_line(ray_start, ray_end, Color.GREEN) 
+	#ddraw_debug_line(ray_start, ray_end, Color.GREEN) 
 
 func _shoot():
 	var space_state = get_world_3d().direct_space_state
@@ -36,13 +37,13 @@ func _shoot():
 	if result:
 		print(result)
 		print(query)
-		draw_debug_line(ray_start, result.position, Color.RED)  # Hit something
+		#draw_debug_line(ray_start, result.position, Color.RED)  # Hit something
 		var hit_object = result.collider
 		print(hit_object)
 		if hit_object.has_method("_on_hit"):
 			hit_object._on_hit(damage)
-	else:
-		draw_debug_line(ray_start, ray_end, Color.BLUE)  # Missed
+	##else:
+		#draw_debug_line(ray_start, ray_end, Color.BLUE)  # Missed
 	
 	if result:
 		print("Hit: ", result.collider.name)
@@ -51,7 +52,9 @@ func _shoot():
 func calculate_swayed_direction():
 	var local_sway = randf()*sway
 	swayed_direction = Vector3(shoot_direction.x+local_sway, shoot_direction.y, shoot_direction.z+local_sway)
-	
+	if gun_model:
+		gun_model.rotation_degrees.x = local_sway * 100  # Adjust multiplier for desired shake intensity
+		gun_model.rotation_degrees.z = local_sway * 100
 
 func _on_facing_direction_changed(new_direction: Vector3):
 	shoot_direction = new_direction

@@ -23,6 +23,7 @@ shape = SubResource("CapsuleShape3D_7dm0k")
 script = ExtResource("2_ar13e")
 
 [node name="SAA4" parent="Gun" instance=ExtResource("2_mjudt")]
+unique_name_in_owner = true
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0.9769592)
 
 [node name="SwayTimer" type="Timer" parent="Gun"]
