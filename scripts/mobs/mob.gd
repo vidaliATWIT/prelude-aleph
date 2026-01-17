@@ -87,11 +87,19 @@ func has_line_of_sight() -> bool:
 	
 	var result = space_state.intersect_ray(query)
 	
+	# Destroy mob if distance is greater than a given value
+	var distance = global_position.distance_to(player.global_position)
+
+	if distance>50.0:
+		print("Too far, disappeared")
+		queue_free()
 	# If raycast hits nothing, or hits the player, we have line of sight
 	if result.is_empty():
 		return true
 	if result.collider == player:
 		return true
+		
+	
 	
 	return false
 	
@@ -121,3 +129,4 @@ func _on_body_entered_attack_range(body):
 func _on_body_exited_attack_range(body):
 	if body.is_in_group("player"):
 		player_in_range = false
+		
