@@ -213,6 +213,7 @@ func _on_sprint_timer_timeout() -> void:
 	fatigue=max(fatigue-1, 0.0)
 	print("Fatigue Increasing: ", fatigue)
 	if fatigue<=0:
+		SFXPlayer.playBreathing()
 		can_sprint=false
 
 
