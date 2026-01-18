@@ -69,6 +69,8 @@ func playSound(soundPlayer: AudioStreamPlayer, soundName: String):
 		soundPlayer.stream = sound_dict[soundName]
 		soundPlayer.play()
 		
+func updateStepTime(wait_time: float):
+	StepTimer.wait_time=wait_time
 func startStepTimer():
 	if StepTimer.is_stopped():
 		StepTimer.start()

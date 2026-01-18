@@ -1,11 +1,15 @@
 extends CharacterBody3D 
-const SPEED = 5.0
+@export var WALK_SPEED = 6.0
+@export var RUN_SPEED = 10.0
+var speed = WALK_SPEED
 
 @onready var meshes = $Meshes  # Reference to your Meshes node
 @onready var weapon = $Gun
 @onready var SFXPlayer = $PlayerSFX
 @onready var camera = $GameCamera
 @onready var trapped_timer = $TrappedTimer
+@onready var sprint_timer = $SprintTimer
+@onready var fatigue_timer = $FatigueTimer
 
 # facing direction
 signal facing_direction_changed(new_direction: Vector3)
@@ -20,10 +24,19 @@ enum State {
 	AIMING,
 	SHOOTING
 }
+# Stats
 @export var max_hp = 10
 @export var max_ammo = 12
 @export var max_sway = 12
+@export var max_fatigue = 10
+@export var max_speed_mod = 10
+@export var speed_mod = 0
+
+
+@export var show_debug = false
 @onready var can_move=true
+@onready var can_sprint=true
+
 
 var hp = max_hp:
 	set(value):
@@ -33,11 +46,16 @@ var ammo = max_ammo:
 	set(value):
 		ammo = value
 		ammo_changed.emit()
+var fatigue = max_fatigue:
+	set(value):
+		fatigue=value
+		fatigue_changed.emit()
 var sway = max_sway
 var has_ammo = ammo>0
 # signals
 signal health_changed
 signal ammo_changed
+signal fatigue_changed
 signal player_died
 signal player_trapped
 signal player_freed
@@ -50,7 +68,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if (can_move):
-		velocity = Vector3(direction.x, 0, direction.y) * 10
+		velocity = Vector3(direction.x, 0, direction.y) * speed
 	else:
 		velocity = Vector3(0, 0, 0)
 	if (velocity.x!=0 or velocity.z!=0):
@@ -100,6 +118,19 @@ func _handle_input():
 				SFXPlayer.playShot()
 			else:
 				SFXPlayer.playDryfire()
+	if can_sprint:
+		if Input.is_action_pressed("sprint"):
+			if sprint_timer.is_stopped():
+				fatigue_timer.stop()
+				sprint_timer.start()
+			speed=RUN_SPEED
+			SFXPlayer.updateStepTime(.4)
+	else:
+		if fatigue<max_fatigue and fatigue_timer.is_stopped():
+			sprint_timer.stop()
+			fatigue_timer.start()
+		speed=WALK_SPEED
+		SFXPlayer.updateStepTime(.8)
 				
 			
 			
@@ -171,8 +202,22 @@ func _shoot():
 func _move():
 	pass
 
+
 func _on_trapped_timer_timeout() -> void:
 	player_freed.emit()
 	trapped_timer.stop()
 	can_move=true
 	print("FREE")
+
+func _on_sprint_timer_timeout() -> void:
+	fatigue=max(fatigue-1, 0.0)
+	print("Fatigue Increasing: ", fatigue)
+	if fatigue<=0:
+		can_sprint=false
+
+
+func _on_fatigue_timer_timeout() -> void:
+	fatigue=min(fatigue+1, max_fatigue)
+	print("Fatigue Decreasing: ", fatigue)
+	if fatigue>5:
+		can_sprint=true

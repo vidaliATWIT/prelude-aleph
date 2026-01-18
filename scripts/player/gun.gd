@@ -14,6 +14,10 @@ var swayed_direction = shoot_direction
 @onready var crosshair = $Crosshair
 var sway = max_sway
 
+# Crosshair animation vars
+@onready var max_frame = 19
+@onready var frame = 0
+
 func _process(_delta: float) -> void:
 	if (not player.is_aiming()):
 		sway=max_sway
@@ -22,7 +26,8 @@ func _aim():
 	var ray_start = global_position
 	calculate_swayed_direction()
 	var ray_end = ray_start + swayed_direction  * shooting_range
-	#ddraw_debug_line(ray_start, ray_end, Color.GREEN) 
+	if player.show_debug:
+		draw_debug_line(ray_start, ray_end, Color.GREEN) 
 
 func _shoot():
 	var space_state = get_world_3d().direct_space_state
@@ -35,15 +40,17 @@ func _shoot():
 	
 	# Draw the ray
 	if result:
-		print(result)
-		print(query)
-		#draw_debug_line(ray_start, result.position, Color.RED)  # Hit something
 		var hit_object = result.collider
-		print(hit_object)
+		if player.show_debug:
+			print(result)
+			print(query)
+			print(hit_object)
+			draw_debug_line(ray_start, result.position, Color.RED)  # Hit something
 		if hit_object.has_method("_on_hit"):
 			hit_object._on_hit(damage)
-	##else:
-		#draw_debug_line(ray_start, ray_end, Color.BLUE)  # Missed
+	else:
+		if player.show_debug:
+			draw_debug_line(ray_start, ray_end, Color.BLUE)  # Missed
 	
 	if result:
 		print("Hit: ", result.collider.name)
@@ -81,11 +88,22 @@ func draw_debug_line(start: Vector3, end: Vector3, color: Color):
 
 func _on_sway_timer_timeout() -> void:
 	if (player.is_aiming()):
-		sway = max(sway-.1, 0.0)
-		var normalized = 1.0 - (sway / max_sway)
-		var frame = int(normalized * 19)
-		print("normalized: ", frame)
-		crosshair.update_crosshair(frame)
+		sway = max(sway-.05, 0.0)
+		#var normalized = 1.0 - (sway / max_sway)
+		#var frame = int(normalized * 19)
+		#print("normalized: ", frame)
+		#crosshair.update_crosshair(frame)
 	else:
 		crosshair.reset_crosshair()
 		sway=max_sway
+
+
+func _on_crosshair_timer_timeout() -> void:
+	if player.is_aiming():
+		frame=min(frame+2, max_frame)
+		print("Frame was: ", frame)
+		crosshair.update_crosshair(frame)
+	else:
+		frame=0
+		crosshair.reset_crosshair()
+	#pass # Replace with function body.

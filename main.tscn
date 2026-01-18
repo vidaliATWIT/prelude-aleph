@@ -35,15 +35,22 @@ transform = Transform3D(-4.3710692e-08, 0, -0.99999034, 0, 0.99999267, 0, 0.9999
 
 [node name="PlayerHUD" type="Control" parent="PlayerCharacter"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 script = ExtResource("2_1bvp3")
 
 [node name="HudContainer" type="VBoxContainer" parent="PlayerCharacter/PlayerHUD"]
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="HPLabel" type="Label" parent="PlayerCharacter/PlayerHUD/HudContainer"]
 layout_mode = 2
@@ -58,6 +65,7 @@ directional_shadow_mode = 0
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource("1_1bvp3")
+spawn_monsters = false
 
 [node name="KillStreakTimer" type="Timer" parent="GameManager"]
 one_shot = true
@@ -73,23 +81,32 @@ autostart = true
 
 [node name="GameHUD" type="Control" parent="GameManager"]
 layout_mode = 3
-anchors_preset = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="Vignette" type="TextureRect" parent="GameManager/GameHUD"]
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 texture = ExtResource("4_7mycd")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="StatusContainer" type="VBoxContainer" parent="GameManager/GameHUD"]
-layout_mode = 0
-offset_top = 555.0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 alignment = 2
 
 [node name="StatusLabel" type="Label" parent="GameManager/GameHUD/StatusContainer"]
@@ -99,10 +116,12 @@ text = "Trapped!"
 horizontal_alignment = 2
 
 [node name="HudContainer" type="VBoxContainer" parent="GameManager/GameHUD"]
-layout_mode = 0
-offset_top = 256.0
-offset_right = 1152.0
-offset_bottom = 364.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="GameOverLabel" type="Label" parent="GameManager/GameHUD/HudContainer"]
 layout_mode = 2
@@ -112,9 +131,12 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="ScoreContainer" type="VBoxContainer" parent="GameManager/GameHUD"]
-layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 
 [node name="ScoreLabel" type="Label" parent="GameManager/GameHUD/ScoreContainer"]
 layout_mode = 2

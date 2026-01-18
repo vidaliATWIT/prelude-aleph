@@ -14,6 +14,13 @@
 collision_mask = 6
 script = ExtResource("1_3hfu2")
 
+[node name="FatigueTimer" type="Timer" parent="."]
+wait_time = 0.4
+autostart = true
+
+[node name="SprintTimer" type="Timer" parent="."]
+wait_time = 0.2
+
 [node name="TrappedTimer" type="Timer" parent="."]
 wait_time = 0.5
 
@@ -29,7 +36,11 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0.9769592)
 
 [node name="SwayTimer" type="Timer" parent="Gun"]
 unique_name_in_owner = true
-wait_time = 0.3
+wait_time = 0.4
+autostart = true
+
+[node name="CrosshairTimer" type="Timer" parent="Gun"]
+wait_time = 0.15
 autostart = true
 
 [node name="Crosshair" type="Node" parent="Gun"]
@@ -63,6 +74,9 @@ script = ExtResource("4_ar13e")
 unique_name_in_owner = true
 wait_time = 0.3
 
+[connection signal="timeout" from="FatigueTimer" to="." method="_on_fatigue_timer_timeout"]
+[connection signal="timeout" from="SprintTimer" to="." method="_on_sprint_timer_timeout"]
 [connection signal="timeout" from="TrappedTimer" to="." method="_on_trapped_timer_timeout"]
 [connection signal="timeout" from="Gun/SwayTimer" to="Gun" method="_on_sway_timer_timeout"]
+[connection signal="timeout" from="Gun/CrosshairTimer" to="Gun" method="_on_crosshair_timer_timeout"]
 [connection signal="timeout" from="PlayerSFX/StepTimer" to="PlayerSFX" method="_on_step_timer_timeout"]
