@@ -11,6 +11,7 @@ var shoot_direction: Vector3 = Vector3.FORWARD
 var swayed_direction = shoot_direction
 @export var is_aiming = false
 @export var max_sway = .2
+@onready var crosshair = $Crosshair
 var sway = max_sway
 
 func _process(_delta: float) -> void:
@@ -21,7 +22,6 @@ func _aim():
 	var ray_start = global_position
 	calculate_swayed_direction()
 	var ray_end = ray_start + swayed_direction  * shooting_range
-	
 	#ddraw_debug_line(ray_start, ray_end, Color.GREEN) 
 
 func _shoot():
@@ -82,5 +82,10 @@ func draw_debug_line(start: Vector3, end: Vector3, color: Color):
 func _on_sway_timer_timeout() -> void:
 	if (player.is_aiming()):
 		sway = max(sway-.1, 0.0)
+		var normalized = 1.0 - (sway / max_sway)
+		var frame = int(normalized * 19)
+		print("normalized: ", frame)
+		crosshair.update_crosshair(frame)
 	else:
+		crosshair.reset_crosshair()
 		sway=max_sway

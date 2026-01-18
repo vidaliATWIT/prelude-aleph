@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://deyiwxmivrrey"]
+[gd_scene load_steps=8 format=3 uid="uid://deyiwxmivrrey"]
 
 [ext_resource type="Script" uid="uid://c7ocr3ir2a3pf" path="res://scripts/player/player.gd" id="1_3hfu2"]
 [ext_resource type="Script" uid="uid://cd67pbd42aewg" path="res://scripts/player/gun.gd" id="2_ar13e"]
 [ext_resource type="PackedScene" uid="uid://ddhmq5t0ada46" path="res://saa.tscn" id="2_mjudt"]
+[ext_resource type="Script" uid="uid://x38m1m88e1u2" path="res://scenes/player/crosshair.gd" id="4_0icub"]
 [ext_resource type="Script" uid="uid://bxjs7bck8ax4d" path="res://scripts/sound/PlayerSFX.gd" id="4_ar13e"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7dm0k"]
@@ -30,6 +31,9 @@ transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0.9769592)
 unique_name_in_owner = true
 wait_time = 0.3
 autostart = true
+
+[node name="Crosshair" type="Node" parent="Gun"]
+script = ExtResource("4_0icub")
 
 [node name="Meshes" type="Node3D" parent="."]
 
