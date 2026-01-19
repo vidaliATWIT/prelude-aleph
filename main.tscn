@@ -26,7 +26,6 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 
 [node name="MonsterSpawner" type="Path3D" parent="PlayerCharacter"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -29, 0, -7)
 curve = SubResource("Curve3D_h2yge")
 
 [node name="FollowPath" type="PathFollow3D" parent="PlayerCharacter/MonsterSpawner"]
@@ -65,7 +64,6 @@ directional_shadow_mode = 0
 
 [node name="GameManager" type="Node" parent="."]
 script = ExtResource("1_1bvp3")
-spawn_monsters = false
 
 [node name="KillStreakTimer" type="Timer" parent="GameManager"]
 one_shot = true

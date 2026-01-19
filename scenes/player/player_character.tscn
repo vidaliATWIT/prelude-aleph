@@ -19,7 +19,7 @@ wait_time = 0.8
 autostart = true
 
 [node name="SprintTimer" type="Timer" parent="."]
-wait_time = 0.2
+wait_time = 0.5
 
 [node name="TrappedTimer" type="Timer" parent="."]
 wait_time = 0.5

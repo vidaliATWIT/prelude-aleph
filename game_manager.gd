@@ -1,9 +1,12 @@
 extends Node
 
 var mobs_spawned = 0
-const MAX_MOBS_PER_WAVE = 5
+var mobs_per_wave = 1
+const ROUND_LENGTH = 5
+const MAX_MOBS_PER_WAVE = 100
 var kill_streak = 0
 var streak_window = 2.0
+var round = 0
 
 @onready var player = %PlayerCharacter
 @onready var game_over_label = $GameHUD/HudContainer/GameOverLabel
@@ -14,9 +17,6 @@ var streak_window = 2.0
 @onready var points = 0
 @onready var kill_streak_timer = $KillStreakTimer
 @export var spawn_monsters = true
-
-
-
 
 func _ready() -> void:
 	game_over_label.visible=false
@@ -41,8 +41,12 @@ func spawn_mob():
 	mobs_spawned += 1
 	
 	# Stop short timer if we've spawned enough mobs
-	if mobs_spawned >= MAX_MOBS_PER_WAVE:
+	if mobs_spawned >= mobs_per_wave:
 		%ShortTimer.stop()
+		round+=1
+		if round%ROUND_LENGTH==0:
+			print("NEXT ROUND HAS: ", mobs_per_wave+1, " MONSTERS!")
+			mobs_per_wave=min(MAX_MOBS_PER_WAVE, mobs_per_wave+1)
 		
 
 func get_valid_spawn_position(max_attempts: int = 10) -> Vector3:
@@ -108,7 +112,7 @@ func _on_mob_died():
 		streak_text = "BABABOOEY!"
 	elif kill_streak >= 4:
 		multiplier = 4
-		streak_text = "UBER KILL!"
+		streak_text = "KILLTACULAR!"
 	elif kill_streak >= 3:
 		multiplier = 3
 		streak_text = "TRIPLE KILL!"

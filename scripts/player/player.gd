@@ -1,7 +1,9 @@
 extends CharacterBody3D 
-@export var WALK_SPEED = 6.0
+@export var WALK_SPEED = 8.0
 @export var RUN_SPEED = 10.0
 var speed = WALK_SPEED
+const WALK_STEP_SIZE=0.4
+const RUN_STEP_SIZE=0.8
 
 @onready var meshes = $Meshes  # Reference to your Meshes node
 @onready var weapon = $Gun
@@ -29,13 +31,11 @@ enum State {
 @export var max_ammo = 12
 @export var max_sway = 12
 @export var max_fatigue = 10
-@export var max_speed_mod = 10
-@export var speed_mod = 0
-
 
 @export var show_debug = false
 @onready var can_move=true
 @onready var can_sprint=true
+@onready var is_sprinting=false
 
 
 var hp = max_hp:
@@ -63,10 +63,25 @@ signal player_freed
 func _ready() -> void:
 	hp=max_hp
 	facing_direction_changed.connect(weapon._on_facing_direction_changed)
+	SFXPlayer.updateStepTime(WALK_STEP_SIZE)
 	add_to_group("player")
 # Physics update
 func _physics_process(delta: float) -> void:
 	var direction = Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	
+	# Handle sprinting
+	if (is_sprinting and can_sprint):
+		if sprint_timer.is_stopped():
+			fatigue_timer.stop()
+			sprint_timer.start()
+		speed=RUN_SPEED
+		SFXPlayer.updateStepTime(WALK_STEP_SIZE)
+	else:
+		if fatigue<max_fatigue and fatigue_timer.is_stopped():
+			sprint_timer.stop()
+			fatigue_timer.start()
+		speed=WALK_SPEED
+		SFXPlayer.updateStepTime(RUN_STEP_SIZE)
 	if (can_move):
 		velocity = Vector3(direction.x, 0, direction.y) * speed
 	else:
@@ -118,21 +133,11 @@ func _handle_input():
 				SFXPlayer.playShot()
 			else:
 				SFXPlayer.playDryfire()
-	if can_sprint:
-		if Input.is_action_pressed("sprint"):
-			if sprint_timer.is_stopped():
-				fatigue_timer.stop()
-				sprint_timer.start()
-			speed=RUN_SPEED
-			SFXPlayer.updateStepTime(.4)
-	else:
-		if fatigue<max_fatigue and fatigue_timer.is_stopped():
-			sprint_timer.stop()
-			fatigue_timer.start()
-		speed=WALK_SPEED
-		SFXPlayer.updateStepTime(.8)
 				
-			
+	if Input.is_action_pressed("sprint"):
+		is_sprinting=true
+	else:
+		is_sprinting=false
 			
 func heal(heal_amt):
 	hp=min((hp+heal_amt), max_hp)
@@ -192,6 +197,7 @@ func stop_movement(rand_num):
 	SFXPlayer.playTrapped()
 	trapped_timer.wait_time=rand_num*.01
 	can_move=false
+	can_sprint=false
 	trapped_timer.start()
 	
 
