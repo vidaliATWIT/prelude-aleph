@@ -57,11 +57,11 @@ func _shoot():
 	sway=max_sway
 		
 func calculate_swayed_direction():
-	var local_sway = randf()*sway
+	var local_sway = randf()*sway*.25
 	swayed_direction = Vector3(shoot_direction.x+local_sway, shoot_direction.y, shoot_direction.z+local_sway)
 	if gun_model:
-		gun_model.rotation_degrees.x = local_sway * 100  # Adjust multiplier for desired shake intensity
-		gun_model.rotation_degrees.z = local_sway * 100
+		self.rotation_degrees.x = local_sway * 100  # Adjust multiplier for desired shake intensity
+		self.rotation_degrees.z = local_sway * 100
 
 func _on_facing_direction_changed(new_direction: Vector3):
 	shoot_direction = new_direction

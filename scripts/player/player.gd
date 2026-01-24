@@ -60,6 +60,8 @@ signal player_died
 signal player_trapped
 signal player_freed
 
+var aiming=false
+
 func _ready() -> void:
 	hp=max_hp
 	facing_direction_changed.connect(weapon._on_facing_direction_changed)
@@ -190,6 +192,7 @@ func die():
 	set_process_input(false)	
 	
 func is_aiming():
+	aiming=player_state==State.AIMING
 	return player_state==State.AIMING
 	
 func stop_movement(rand_num):
