@@ -17,6 +17,7 @@ var sway = max_sway
 # Crosshair animation vars
 @onready var max_frame = 19
 @onready var frame = 0
+@onready var ammo_model = $SAA4/AmmoParent
 
 func _process(_delta: float) -> void:
 	if (not player.is_aiming()):
@@ -85,6 +86,8 @@ func draw_debug_line(start: Vector3, end: Vector3, color: Color):
 	await get_tree().create_timer(0.1).timeout
 	mesh_instance.queue_free()
 
+func _on_ammo_changed(pos_increment: int):
+	ammo_model.position = Vector3(ammo_model.position.x, ammo_model.position.y+(pos_increment)*.05 , ammo_model.position.z)
 
 func _on_sway_timer_timeout() -> void:
 	if (player.is_aiming()):

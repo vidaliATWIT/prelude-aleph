@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=4 uid="uid://deyiwxmivrrey"]
+[gd_scene load_steps=44 format=4 uid="uid://deyiwxmivrrey"]
 
 [ext_resource type="Script" uid="uid://c7ocr3ir2a3pf" path="res://scripts/player/player.gd" id="1_3hfu2"]
 [ext_resource type="Script" uid="uid://cd67pbd42aewg" path="res://scripts/player/gun.gd" id="2_ar13e"]
@@ -7,6 +7,9 @@
 [ext_resource type="Texture2D" uid="uid://bhcd3vjc5gyyu" path="res://art/3d_renders/Skeleton/GameBoyColor/base.png" id="5_ocp37"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7dm0k"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_0icub"]
+size = Vector3(0.1, 0.1, 0.1)
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70sxm"]
 resource_name = "Material.003"
@@ -480,6 +483,14 @@ script = ExtResource("2_ar13e")
 unique_name_in_owner = true
 transform = Transform3D(0.2, 0, 0, 0, 0.2, 0, 0, 0, 0.2, 0, 0, 0.9769592)
 
+[node name="AmmoParent" type="Node3D" parent="Gun/SAA4"]
+transform = Transform3D(4.99556, -0.18022221, 0.108958334, 0.18583187, 4.989387, -0.26742578, -0.09908765, 0.2712381, 4.9916573, 0, 0.4493531, -0.93452454)
+
+[node name="Ammo" type="MeshInstance3D" parent="Gun/SAA4/AmmoParent"]
+transform = Transform3D(1, 0, 0, 0, 0.9999998, 0, 0, 0, 0.9999998, 0, 0, -5.9604645e-08)
+mesh = SubResource("BoxMesh_0icub")
+skeleton = NodePath("../../..")
+
 [node name="Empty" type="Node3D" parent="Gun/SAA4"]
 transform = Transform3D(0, 1, 0, 0, 0, -1, -1, 0, 0, -3.6028602, 0, 0)
 
@@ -693,6 +704,11 @@ script = ExtResource("4_ar13e")
 [node name="StepTimer" type="Timer" parent="PlayerSFX"]
 unique_name_in_owner = true
 wait_time = 0.3
+
+[node name="AmmoTree" type="AnimationTree" parent="."]
+root_node = NodePath("../SpineTree")
+
+[node name="AmmoPlayer" type="AnimationPlayer" parent="AmmoTree"]
 
 [node name="GunTree" type="AnimationTree" parent="."]
 deterministic = false

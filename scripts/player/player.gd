@@ -12,6 +12,7 @@ const RUN_STEP_SIZE=0.8
 @onready var trapped_timer = $TrappedTimer
 @onready var sprint_timer = $SprintTimer
 @onready var fatigue_timer = $FatigueTimer
+@onready var ammo_model = $Gun/SAA4/AmmoParent
 
 # facing direction
 signal facing_direction_changed(new_direction: Vector3)
@@ -45,7 +46,7 @@ var hp = max_hp:
 var ammo = max_ammo:
 	set(value):
 		ammo = value
-		ammo_changed.emit()
+		ammo_changed.emit(max_ammo-ammo)
 var fatigue = max_fatigue:
 	set(value):
 		fatigue=value
@@ -65,6 +66,7 @@ var aiming=false
 func _ready() -> void:
 	hp=max_hp
 	facing_direction_changed.connect(weapon._on_facing_direction_changed)
+	ammo_changed.connect(weapon._on_ammo_changed)
 	SFXPlayer.updateStepTime(WALK_STEP_SIZE)
 	add_to_group("player")
 # Physics update
