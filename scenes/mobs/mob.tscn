@@ -1,15 +1,213 @@
-[gd_scene load_steps=6 format=3 uid="uid://qekx3kfjvxo5"]
+[gd_scene load_steps=24 format=3 uid="uid://qekx3kfjvxo5"]
 
 [ext_resource type="Script" uid="uid://bseh54mccm3kr" path="res://scripts/mobs/mob.gd" id="1_s2wnx"]
 [ext_resource type="Script" uid="uid://d0d5oxopnyovx" path="res://scripts/sound/TickSFX.gd" id="2_s6b6g"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l1wv7"]
 
-[sub_resource type="CapsuleMesh" id="CapsuleMesh_s2wnx"]
+[sub_resource type="BoxMesh" id="BoxMesh_s6b6g"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_s2wnx"]
 height = 0.665
 radius = 0.885
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_q44lt"]
+animation = &"attack_idle"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_62b1e"]
+animation = &"attack_lunge"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2sf44"]
+advance_mode = 2
+advance_expression = "player_in_range==true"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_rqkdu"]
+advance_mode = 2
+advance_expression = "player_in_range==false"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_sg8ih"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_s6b6g"]
+states/attack_idle/node = SubResource("AnimationNodeAnimation_q44lt")
+states/attack_idle/position = Vector2(475, 97)
+states/attack_lunge/node = SubResource("AnimationNodeAnimation_62b1e")
+states/attack_lunge/position = Vector2(677, 100)
+transitions = ["attack_idle", "attack_lunge", SubResource("AnimationNodeStateMachineTransition_2sf44"), "attack_lunge", "attack_idle", SubResource("AnimationNodeStateMachineTransition_rqkdu"), "Start", "attack_idle", SubResource("AnimationNodeStateMachineTransition_sg8ih")]
+
+[sub_resource type="Animation" id="Animation_2sf44"]
+resource_name = "attack_idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Model/AttackArm:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Model/AttackArm:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.6, -0.08258057, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_rqkdu"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Model/AttackArm:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Model/AttackArm:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(-0.6, -0.08258057, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_sg8ih"]
+resource_name = "attack_lunge"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Model/AttackArm:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.13333334, 0.36666667, 0.5),
+"transitions": PackedFloat32Array(1, 1, 0.2030629, 1),
+"update": 0,
+"values": [Vector3(-0.6, -0.08258057, 0), Vector3(-0.6, -0.083, -0.42), Vector3(-0.6, -0.083, 1.525), Vector3(-0.6, -0.08258057, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_rqkdu"]
+_data = {
+&"RESET": SubResource("Animation_rqkdu"),
+&"attack_idle": SubResource("Animation_2sf44"),
+&"attack_lunge": SubResource("Animation_sg8ih")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_s6b6g"]
+animation = &"mob_move"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_q44lt"]
+
+[sub_resource type="AnimationNodeTimeSeek" id="AnimationNodeTimeSeek_s6b6g"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_s6b6g"]
+graph_offset = Vector2(-604.6439, -7.6844482)
+nodes/output/position = Vector2(380, 60)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_q44lt")
+nodes/TimeScale/position = Vector2(40, 180)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_s6b6g")
+nodes/Animation/position = Vector2(-280, 60)
+nodes/TimeSeek/node = SubResource("AnimationNodeTimeSeek_s6b6g")
+nodes/TimeSeek/position = Vector2(-60, 20)
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"Animation"]
+
+[sub_resource type="Animation" id="Animation_q44lt"]
+resource_name = "mob_move"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Model/MeshInstance3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.73333335, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.17453292, 0, 0), Vector3(0, 0, 0), Vector3(0.27925268, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Model/MeshInstance3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.2, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_s6b6g"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Model/MeshInstance3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Model/MeshInstance3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_62b1e"]
+resource_name = "mob_idle"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Model/MeshInstance3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.12, 0), Vector3(0, 0, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_62b1e"]
+_data = {
+&"RESET": SubResource("Animation_s6b6g"),
+&"mob_idle": SubResource("Animation_62b1e"),
+&"mob_move": SubResource("Animation_q44lt")
+}
 
 [node name="Enemy" type="CharacterBody3D"]
 collision_layer = 2
@@ -20,8 +218,17 @@ script = ExtResource("1_s2wnx")
 transform = Transform3D(1.12, 0, 0, 0, 1.12, 0, 0, 0, 1.12, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_l1wv7")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-mesh = SubResource("CapsuleMesh_s2wnx")
+[node name="Model" type="Node3D" parent="."]
+
+[node name="AttackArm" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(0.25, 0, 0, 0, 0.25, 0, 0, 0, 1, -0.6, -0.08258057, 0)
+mesh = SubResource("BoxMesh_s6b6g")
+skeleton = NodePath("../..")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Model"]
+transform = Transform3D(1, 0, 0, 0, 0.9995603, -0.02965105, 0, 0.02965105, 0.9995603, 0, -0.011327535, 0)
+mesh = SubResource("BoxMesh_s6b6g")
+skeleton = NodePath("../..")
 
 [node name="AttackRange" type="Area3D" parent="."]
 
@@ -42,5 +249,30 @@ script = ExtResource("2_s6b6g")
 [node name="StepTimer" type="Timer" parent="TickSFX"]
 wait_time = 0.33
 autostart = true
+
+[node name="AttackTree" type="AnimationTree" parent="."]
+deterministic = false
+reset_on_save = false
+root_node = NodePath(".")
+tree_root = SubResource("AnimationNodeStateMachine_s6b6g")
+advance_expression_base_node = NodePath("..")
+anim_player = NodePath("AttackPlayer")
+
+[node name="AttackPlayer" type="AnimationPlayer" parent="AttackTree"]
+libraries = {
+&"": SubResource("AnimationLibrary_rqkdu")
+}
+
+[node name="MoveTree" type="AnimationTree" parent="."]
+root_node = NodePath(".")
+tree_root = SubResource("AnimationNodeBlendTree_s6b6g")
+anim_player = NodePath("MovePlayer")
+parameters/TimeScale/scale = 2.289999999999999
+parameters/TimeSeek/seek_request = -1.0
+
+[node name="MovePlayer" type="AnimationPlayer" parent="MoveTree"]
+libraries = {
+&"": SubResource("AnimationLibrary_62b1e")
+}
 
 [connection signal="timeout" from="TickSFX/StepTimer" to="TickSFX" method="_on_step_timer_timeout"]

@@ -14,8 +14,11 @@ var max_speed = 8.0
 var max_distance = 20.0
 
 @onready var SFXPlayer = $TickSFX
+@onready var MoveTree = $MoveTree
 
 signal mob_died
+@onready var model = $Model
+
 
 func _ready():
 	player = get_node("/root/main/PlayerCharacter")
@@ -37,15 +40,18 @@ func _physics_process(delta):
 		var right_vector = direction.cross(Vector3.UP).normalized()
 		direction = -right_vector*2.0  
 	
+	# Rotate model instantly towards the direction of movement
+	if direction.length() > 0.01:  # Only rotate if there's meaningful direction
+		model.rotation.y = atan2(direction.x, direction.z)
+	
 	var normalized_dist = clamp(distance / max_distance, 0.0, 1.0)
 	speed = lerp(max_speed, min_speed, normalized_dist * normalized_dist)
 	velocity = direction * speed
-	
+	MoveTree["parameters/TimeScale/scale"] = speed*.4
 	if (velocity.length() > 0):
 		SFXPlayer.startStepTimer()
 	else:
 		SFXPlayer.stopStepTimer()
-		
 	move_and_slide()
 	attack()
 
