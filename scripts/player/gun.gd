@@ -18,6 +18,7 @@ var sway = max_sway
 @onready var max_frame = 19
 @onready var frame = 0
 @onready var ammo_model = $SAA4/AmmoParent
+@onready var muzzle_flash = $VFX/MuzzleFlash
 
 func _process(_delta: float) -> void:
 	if (not player.is_aiming()):
@@ -38,6 +39,8 @@ func _shoot():
 	
 	var query = PhysicsRayQueryParameters3D.create(ray_start, ray_end)
 	var result = space_state.intersect_ray(query)
+	
+	muzzle_flash.emitting=true
 	
 	# Draw the ray
 	if result:
