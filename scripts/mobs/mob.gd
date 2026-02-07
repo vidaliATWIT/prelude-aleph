@@ -18,6 +18,7 @@ var max_distance = 20.0
 
 signal mob_died
 @onready var model = $Model
+@onready var blood_splash = $VFX/Blood
 
 
 func _ready():
@@ -58,6 +59,7 @@ func _physics_process(delta):
 func _on_hit(damage):
 	print("_ONHIT")
 	hp-=damage
+	blood_splash.emitting=true
 	if hp<=0:
 		SFXPlayer.playDeath()
 		mob_died.emit()

@@ -37,6 +37,7 @@ enum State {
 @onready var can_move=true
 @onready var can_sprint=true
 @onready var is_sprinting=false
+@onready var blood_splash = $VFX/Blood
 
 
 var hp = max_hp:
@@ -155,6 +156,7 @@ func increase_ammo(ammo_amt):
 func take_damage(damage):
 	print("took damage: ", damage)
 	hp = hp-damage
+	blood_splash.emitting=true
 	if hp<=0:
 		die()
 	else:

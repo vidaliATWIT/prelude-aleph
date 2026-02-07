@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=4 uid="uid://deyiwxmivrrey"]
+[gd_scene load_steps=59 format=4 uid="uid://deyiwxmivrrey"]
 
 [ext_resource type="Script" uid="uid://c7ocr3ir2a3pf" path="res://scripts/player/player.gd" id="1_3hfu2"]
 [ext_resource type="Script" uid="uid://cd67pbd42aewg" path="res://scripts/player/gun.gd" id="2_ar13e"]
@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://cd5s7lys6ji6y" path="res://art/particles/flash.png" id="4_f85ux"]
 [ext_resource type="Texture2D" uid="uid://bhcd3vjc5gyyu" path="res://art/3d_renders/Skeleton/GameBoyColor/base.png" id="5_ocp37"]
 [ext_resource type="ArrayMesh" uid="uid://cw2uwa8yc2itr" path="res://art/particles/muzzle_plane.obj" id="5_ryjgy"]
+[ext_resource type="Texture2D" uid="uid://ce6jpmcb70sdu" path="res://art/particles/blood.png" id="8_ryjgy"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_7dm0k"]
 
@@ -96,21 +97,21 @@ albedo_texture = ExtResource("4_f85ux")
 _data = [Vector2(0.0047169775, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_gr6m2"]
+[sub_resource type="CurveTexture" id="CurveTexture_wvac4"]
 curve = SubResource("Curve_t1eku")
 
 [sub_resource type="Curve" id="Curve_xhqn0"]
 _data = [Vector2(0, 0), 0.0, 2.8251896, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
 point_count = 2
 
-[sub_resource type="CurveTexture" id="CurveTexture_fn450"]
+[sub_resource type="CurveTexture" id="CurveTexture_t1eku"]
 curve = SubResource("Curve_xhqn0")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ifuus"]
 gravity = Vector3(0, 0, 0)
-scale_curve = SubResource("CurveTexture_fn450")
+scale_curve = SubResource("CurveTexture_t1eku")
 color = Color(1.3528494, 1.193816, 1.3528494, 1)
-alpha_curve = SubResource("CurveTexture_gr6m2")
+alpha_curve = SubResource("CurveTexture_wvac4")
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_7dm0k"]
 
@@ -490,6 +491,35 @@ _data = {
 &"spine_wounded": SubResource("Animation_xhqn0")
 }
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gr6m2"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+albedo_color = Color(0.47003478, 0, 0.21879274, 1)
+albedo_texture = ExtResource("8_ryjgy")
+
+[sub_resource type="Curve" id="Curve_fn450"]
+_data = [Vector2(0.0047169775, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_gr6m2"]
+curve = SubResource("Curve_fn450")
+
+[sub_resource type="Curve" id="Curve_ifuus"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.13162705, 0.31486487), 0.0, 2.8251896, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_fn450"]
+curve = SubResource("Curve_ifuus")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_2h7np"]
+scale_curve = SubResource("CurveTexture_fn450")
+color = Color(1.3528494, 0, 0, 1)
+alpha_curve = SubResource("CurveTexture_gr6m2")
+
 [node name="PlayerCharacter" type="CharacterBody3D"]
 collision_mask = 6
 script = ExtResource("1_3hfu2")
@@ -556,7 +586,7 @@ transform = Transform3D(1, 0, 0, 0, 1.0000005, 0, 0, 0, 1.0000005, 0, 0.12213980
 material_override = SubResource("StandardMaterial3D_wvac4")
 emitting = false
 amount = 1
-lifetime = 0.09999999999999999
+lifetime = 0.1
 one_shot = true
 randomness = 1.0
 fixed_fps = 60
@@ -781,6 +811,23 @@ root_node = NodePath("../..")
 libraries = {
 &"": SubResource("AnimationLibrary_t1eku")
 }
+
+[node name="VFX" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 0.19999999)
+
+[node name="Blood" type="GPUParticles3D" parent="VFX"]
+transform = Transform3D(1, 0, 0, 0, 1.0000005, 0, 0, 0, 1.0000005, 4.371139e-08, 0.122139804, -0.054533243)
+material_override = SubResource("StandardMaterial3D_gr6m2")
+emitting = false
+amount = 2
+lifetime = 0.2
+one_shot = true
+explosiveness = 0.8
+randomness = 1.0
+fixed_fps = 60
+trail_lifetime = 4.55
+process_material = SubResource("ParticleProcessMaterial_2h7np")
+draw_pass_1 = ExtResource("5_ryjgy")
 
 [connection signal="timeout" from="FatigueTimer" to="." method="_on_fatigue_timer_timeout"]
 [connection signal="timeout" from="SprintTimer" to="." method="_on_sprint_timer_timeout"]

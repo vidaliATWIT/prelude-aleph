@@ -1,7 +1,9 @@
-[gd_scene load_steps=24 format=3 uid="uid://qekx3kfjvxo5"]
+[gd_scene load_steps=32 format=3 uid="uid://qekx3kfjvxo5"]
 
 [ext_resource type="Script" uid="uid://bseh54mccm3kr" path="res://scripts/mobs/mob.gd" id="1_s2wnx"]
 [ext_resource type="Script" uid="uid://d0d5oxopnyovx" path="res://scripts/sound/TickSFX.gd" id="2_s6b6g"]
+[ext_resource type="Texture2D" uid="uid://ce6jpmcb70sdu" path="res://art/particles/blood.png" id="3_62b1e"]
+[ext_resource type="ArrayMesh" uid="uid://cw2uwa8yc2itr" path="res://art/particles/muzzle_plane.obj" id="4_2sf44"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_l1wv7"]
 
@@ -35,8 +37,8 @@ states/attack_lunge/node = SubResource("AnimationNodeAnimation_62b1e")
 states/attack_lunge/position = Vector2(677, 100)
 transitions = ["attack_idle", "attack_lunge", SubResource("AnimationNodeStateMachineTransition_2sf44"), "attack_lunge", "attack_idle", SubResource("AnimationNodeStateMachineTransition_rqkdu"), "Start", "attack_idle", SubResource("AnimationNodeStateMachineTransition_sg8ih")]
 
-[sub_resource type="Animation" id="Animation_2sf44"]
-resource_name = "attack_idle"
+[sub_resource type="Animation" id="Animation_rqkdu"]
+length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -62,8 +64,8 @@ tracks/1/keys = {
 "values": [Vector3(-0.6, -0.08258057, 0)]
 }
 
-[sub_resource type="Animation" id="Animation_rqkdu"]
-length = 0.001
+[sub_resource type="Animation" id="Animation_2sf44"]
+resource_name = "attack_idle"
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -131,34 +133,6 @@ nodes/TimeSeek/node = SubResource("AnimationNodeTimeSeek_s6b6g")
 nodes/TimeSeek/position = Vector2(-60, 20)
 node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"Animation"]
 
-[sub_resource type="Animation" id="Animation_q44lt"]
-resource_name = "mob_move"
-loop_mode = 1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("../Model/MeshInstance3D:rotation")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.25, 0.5, 0.73333335, 1),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(-0.17453292, 0, 0), Vector3(0, 0, 0), Vector3(0.27925268, 0, 0), Vector3(0, 0, 0)]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("../Model/MeshInstance3D:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.5, 1),
-"transitions": PackedFloat32Array(1, 1, 1),
-"update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, -0.2, 0), Vector3(0, 0, 0)]
-}
-
 [sub_resource type="Animation" id="Animation_s6b6g"]
 length = 0.001
 tracks/0/type = "value"
@@ -202,12 +176,69 @@ tracks/0/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, 0.12, 0), Vector3(0, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_q44lt"]
+resource_name = "mob_move"
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../Model/MeshInstance3D:rotation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.73333335, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(-0.17453292, 0, 0), Vector3(0, 0, 0), Vector3(0.27925268, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("../Model/MeshInstance3D:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5, 1),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, -0.2, 0), Vector3(0, 0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_62b1e"]
 _data = {
 &"RESET": SubResource("Animation_s6b6g"),
 &"mob_idle": SubResource("Animation_62b1e"),
 &"mob_move": SubResource("Animation_q44lt")
 }
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rqkdu"]
+transparency = 1
+blend_mode = 1
+cull_mode = 2
+shading_mode = 0
+vertex_color_use_as_albedo = true
+vertex_color_is_srgb = true
+albedo_color = Color(0.47003478, 0, 0.21879274, 1)
+albedo_texture = ExtResource("3_62b1e")
+
+[sub_resource type="Curve" id="Curve_sg8ih"]
+_data = [Vector2(0.0047169775, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_gr6m2"]
+curve = SubResource("Curve_sg8ih")
+
+[sub_resource type="Curve" id="Curve_4yroq"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.13162705, 0.31486487), 0.0, 2.8251896, 0, 0, Vector2(1, 1), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_fn450"]
+curve = SubResource("Curve_4yroq")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_1g67k"]
+scale_curve = SubResource("CurveTexture_fn450")
+color = Color(1.3528494, 0, 0, 1)
+alpha_curve = SubResource("CurveTexture_gr6m2")
 
 [node name="Enemy" type="CharacterBody3D"]
 collision_layer = 2
@@ -226,7 +257,7 @@ mesh = SubResource("BoxMesh_s6b6g")
 skeleton = NodePath("../..")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Model"]
-transform = Transform3D(1, 0, 0, 0, 0.9995603, -0.02965105, 0, 0.02965105, 0.9995603, 0, -0.011327535, 0)
+transform = Transform3D(1, 0, 0, 0, 0.99951017, 0.031293146, 0, -0.031293146, 0.99951017, 0, -0.017932585, 0)
 mesh = SubResource("BoxMesh_s6b6g")
 skeleton = NodePath("../..")
 
@@ -274,5 +305,22 @@ parameters/TimeSeek/seek_request = -1.0
 libraries = {
 &"": SubResource("AnimationLibrary_62b1e")
 }
+
+[node name="VFX" type="Node3D" parent="."]
+transform = Transform3D(-1, 0, 8.742278e-08, 0, 1, 0, -8.742278e-08, 0, -1, 0, 0, 0.19999999)
+
+[node name="Blood" type="GPUParticles3D" parent="VFX"]
+transform = Transform3D(1, 0, 0, 0, 1.0000005, 0, 0, 0, 1.0000005, 0, 0.122139804, -0.55453324)
+material_override = SubResource("StandardMaterial3D_rqkdu")
+emitting = false
+amount = 2
+lifetime = 0.2
+one_shot = true
+explosiveness = 0.8
+randomness = 1.0
+fixed_fps = 60
+trail_lifetime = 4.55
+process_material = SubResource("ParticleProcessMaterial_1g67k")
+draw_pass_1 = ExtResource("4_2sf44")
 
 [connection signal="timeout" from="TickSFX/StepTimer" to="TickSFX" method="_on_step_timer_timeout"]
