@@ -1,5 +1,8 @@
 extends Node
 
+const SAVE_DIR = "user://Documents/PreludeAleph/"
+const SAVE_FILE = SAVE_DIR + "highscore.save"
+
 var mobs_spawned = 0
 var mobs_per_wave = 1
 const ROUND_LENGTH = 5
@@ -11,6 +14,7 @@ var round = 0
 @onready var player = %PlayerCharacter
 @onready var game_over_label = $GameHUD/HudContainer/GameOverLabel
 @onready var score_label = $GameHUD/ScoreContainer/ScoreLabel
+@onready var high_score_label = $GameHUD/ScoreContainer/HighScoreLabel
 @onready var streak_label = $GameHUD/ScoreContainer/KillstreakLabel
 @onready var status_label = $GameHUD/StatusContainer/StatusLabel
 @onready var dead_mob_count = 0
@@ -26,6 +30,9 @@ func _ready() -> void:
 	dead_mob_count=0
 	points = 0
 	kill_streak=0
+	high_score_label.hide()
+	
+	load_high_score()
 	
 
 func spawn_mob():
@@ -73,6 +80,35 @@ func get_valid_spawn_position(max_attempts: int = 10) -> Vector3:
 			return test_position
 	
 	return Vector3.ZERO
+
+func save_high_score() -> void:
+	if not DirAccess.dir_exists_absolute(SAVE_DIR):
+		var err = DirAccess.make_dir_recursive_absolute(SAVE_DIR)
+		if err!=OK:
+			push_error("GameManager: Failed to create save directory: %s" % SAVE_DIR)
+			return
+	var file = FileAccess.open(SAVE_FILE, FileAccess.WRITE)
+	if file == null:
+		push_error("GameManager: Failed to open save file for writing: %s" % FileAccess.get_open_error())
+		return
+	file.store_var(points)
+	file.close()
+
+func load_high_score() -> void:
+	if not FileAccess.file_exists(SAVE_FILE):
+		return
+	var file = FileAccess.open(SAVE_FILE, FileAccess.READ)
+	if file == null:
+		push_error("GameManager: Failed to open save file for reading: %s" % FileAccess.get_open_error())
+		return
+	var saved_score = file.get_var()
+	file.close()
+	if typeof(saved_score) != TYPE_INT:
+		push_error("GameManager: Save file corrupted — unexpected data type.")
+		return
+	high_score_label.text = "High Score: %d" % saved_score
+	high_score_label.show()
+
 func _on_short_timer_timeout() -> void:
 	if spawn_monsters:
 		print("Spawned mob")
@@ -89,6 +125,7 @@ func _on_long_timer_timeout() -> void:
 func on_player_died():
 	get_tree().paused = true
 	game_over_label.visible=true
+	save_high_score()
 	await get_tree().create_timer(1.5).timeout
 	get_tree().paused = false  # Unpause before changing scene
 	get_tree().reload_current_scene()	

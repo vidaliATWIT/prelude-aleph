@@ -1,7 +1,7 @@
 extends Node
 @onready var SoundPlayer: AudioStreamPlayer
 var song_index = 0
-var main_menu = load("res://sounds/music/mainloop.wav")
+#var main_menu = load("res://sounds/music/mainloop.wav")
 var tracklist = {
 	"track1": preload("res://sounds/music/Cave Music.mp3"),
 }

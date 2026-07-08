@@ -1,0 +1,72 @@
+[gd_scene load_steps=12 format=3 uid="uid://tt430yseagqe"]
+
+[ext_resource type="Script" uid="uid://cy8rbhjy32w36" path="res://scripts/mainmenu.gd" id="1_dglrs"]
+[ext_resource type="Texture2D" uid="uid://xsuj58yf173k" path="res://images/title_screen/start_btn_small.png" id="3_eo7fg"]
+[ext_resource type="Texture2D" uid="uid://bnxvt7rg5dwi3" path="res://images/title_screen/start_btn_small_hover.png" id="3_qc3tk"]
+[ext_resource type="Texture2D" uid="uid://cimuecesqsc0n" path="res://images/title_screen/exit_btn_small.png" id="4_5cvdy"]
+[ext_resource type="Texture2D" uid="uid://c4ua1fggeu6hd" path="res://images/title_screen/start_btn_small_pressed.png" id="4_jq50s"]
+[ext_resource type="Texture2D" uid="uid://blflwd6t5v65g" path="res://images/title_screen/exit_btn_small_pressed.png" id="7_5mcia"]
+[ext_resource type="Texture2D" uid="uid://c2sk1ptr07ixy" path="res://images/title_screen/exit_btn_small_hover2.png" id="7_7la6k"]
+[ext_resource type="Script" uid="uid://ob1qjdjvmj7a" path="res://scripts/sound/UISFX.gd" id="8_8a8k8"]
+[ext_resource type="Texture2D" uid="uid://bodbyyqee7w5y" path="res://images/title_screen/loading_icon_white.png" id="10_2nypq"]
+
+[sub_resource type="Gradient" id="Gradient_7la6k"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_2nypq"]
+gradient = SubResource("Gradient_7la6k")
+
+[node name="MainMenu" type="Node2D"]
+script = ExtResource("1_dglrs")
+
+[node name="MainMenuUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 960.0
+offset_bottom = 720.0
+
+[node name="TextureRect" type="TextureRect" parent="MainMenuUI"]
+layout_mode = 0
+offset_right = 1155.0
+offset_bottom = 640.0
+texture = SubResource("GradientTexture2D_2nypq")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenuUI"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 82.0
+offset_top = -360.0
+offset_right = 333.0
+offset_bottom = 360.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="StartButton" type="TextureButton" parent="MainMenuUI/VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("3_eo7fg")
+texture_pressed = ExtResource("4_jq50s")
+texture_hover = ExtResource("3_qc3tk")
+
+[node name="QuitButton" type="TextureButton" parent="MainMenuUI/VBoxContainer"]
+layout_mode = 2
+texture_normal = ExtResource("4_5cvdy")
+texture_pressed = ExtResource("7_5mcia")
+texture_hover = ExtResource("7_7la6k")
+
+[node name="SFXPlayer" type="Node" parent="."]
+script = ExtResource("8_8a8k8")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="SFXPlayer"]
+
+[node name="loadingIcon" type="TextureRect" parent="."]
+visible = false
+offset_left = 4.0
+offset_top = -73.0
+offset_right = 1155.0
+offset_bottom = 647.0
+texture = ExtResource("10_2nypq")

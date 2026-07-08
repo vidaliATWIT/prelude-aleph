@@ -13,6 +13,7 @@ const RUN_STEP_SIZE=0.8
 @onready var sprint_timer = $SprintTimer
 @onready var fatigue_timer = $FatigueTimer
 @onready var ammo_model = $Gun/SAA4/AmmoParent
+@onready var animator = $Meshes/PlayerMesh/PlayerModel/AnimationPlayer
 
 # facing direction
 signal facing_direction_changed(new_direction: Vector3)
@@ -92,15 +93,14 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity = Vector3(0, 0, 0)
 	if (velocity.x!=0 or velocity.z!=0):
-		player_state=State.MOVING
 		SFXPlayer.startStepTimer()
 	else:
-		player_state=State.IDLE
 		SFXPlayer.stopStepTimer()
 	move_and_slide()
 	
 	
 func _process(delta: float) -> void:
+	state_animate()
 	var camera = get_viewport().get_camera_3d()
 	if camera == null:
 		return
@@ -126,6 +126,10 @@ func _process(delta: float) -> void:
 		_handle_input()
 
 func _handle_input():
+	if (velocity.x!=0 or velocity.z!=0):
+		player_state=State.MOVING
+	else:
+		player_state=State.IDLE
 	if (player_state!=State.MOVING and player_state!=State.SHOOTING):
 		if Input.is_action_pressed("aim"):
 			player_state=State.AIMING
@@ -214,7 +218,25 @@ func _shoot():
 	pass
 func _move():
 	pass
+	
+	
 
+func state_animate():
+	if player_state==State.IDLE:
+		print("IDLE")
+		animator.play("Idle_001")
+	elif player_state==State.MOVING:
+		print("MOVE")
+		if is_sprinting==true:
+			animator.play("Jog_001")
+		else:
+			animator.play("Walk_001")
+	elif player_state==State.AIMING:
+		print("AIM")
+		animator.play("IdelAim")
+	elif player_state==State.SHOOTING:
+		print("SHOOT")
+		animator.play("Shoot_001")
 
 func _on_trapped_timer_timeout() -> void:
 	player_freed.emit()

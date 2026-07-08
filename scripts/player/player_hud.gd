@@ -10,7 +10,12 @@ func _ready():
 	# Connect to player's health changed signal if it exists
 	if player.has_signal("health_changed"):
 		player.health_changed.connect(update_hud)
-		player.ammo_changed.connect(update_hud)
+	else:
+		push_error("Player did not have health_changed signal")
+	if player.has_signal("ammo_changed"):
+		player.ammo_changed.connect(func(_new_ammo): update_hud())
+	else:
+		push_error("Player did not have ammo_changed signal")
 
 func _process(_delta):
 	# Fallback: Update every frame if no signal exists
